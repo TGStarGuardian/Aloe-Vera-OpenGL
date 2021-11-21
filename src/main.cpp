@@ -40,17 +40,7 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-struct PointLight {
-    glm::vec3 position;
-    glm::vec3 ambient;
-    glm::vec3 diffuse;
-    glm::vec3 specular;
-
-    float constant;
-    float linear;
-    float quadratic;
-};
-
+float heightScale = 0.001;
 
 int main() {
     // glfw: initialize and configure
@@ -86,6 +76,7 @@ int main() {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
+    
 
 
     // depth testing
@@ -97,11 +88,14 @@ int main() {
 
     Model aloe_vera("resources/objects/aloe_vera_plant/aloevera.obj");
     Model lightBall("resources/objects/ball/ball.obj");
+    Model room("resources/objects/room/untitled.obj");
+    unsigned int heightMap = loadTexture(string("resources/objects/room/displacement.png").c_str());
 
     // instantiation of shaders
 
     Shader aloeShader("resources/shaders/aloe_vera.vs", "resources/shaders/aloe_vera.fs");
     Shader lightSource("resources/shaders/light_source.vs", "resources/shaders/light_source.fs");
+    Shader basic("resources/shaders/basic.vs", "resources/shaders/basic.fs");
 
     // setting point light
     glm::vec3 lightPos(0.0f, 1.0f, 1.0f);
@@ -144,6 +138,7 @@ int main() {
         glBindVertexArray(0);
     }
 
+
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -166,7 +161,7 @@ int main() {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // setting up values for aloeVera shader
+        // setting values for aloeVera shader
         aloeShader.use();
 
         aloeShader.setVec3("viewPosition", camera.Position);
@@ -176,10 +171,10 @@ int main() {
 
         aloeShader.setMat4("projection", projection);
         aloeShader.setMat4("view", view);
-        aloeShader.setVec3("directionalLight.direction", -0.2f, -1.0f, -0.3f);
-        aloeShader.setVec3("directionalLight.ambient", 0.05f, 0.05f, 0.05f);
-        aloeShader.setVec3("directionalLight.diffuse", 0.4f, 0.4f, 0.4f);
-        aloeShader.setVec3("directionalLight.specular", 0.5f, 0.5f, 0.5f);
+        aloeShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
+        aloeShader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+        aloeShader.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
+        aloeShader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
         aloeShader.setVec3("pointLight.position", lightPos);
         aloeShader.setVec3("pointLight.ambient", 0.2f, 0.2f, 0.2f);
         aloeShader.setVec3("pointLight.diffuse", 0.5f, 0.5f, 0.5f);
@@ -190,24 +185,10 @@ int main() {
 
         aloeShader.setVec3("lightPos", lightPos);
         aloeShader.setVec3("viewPos", camera.Position);
-        /*
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));	// it's a bit too big for our scene, so scale it down
-        aloeShader.setMat4("model", model);
-        aloeShader.setFloat("material.shininess", 32.0f);
-
-        aloe_vera.Draw(aloeShader);
-        */
         aloeShader.setFloat("material.shininess", 32.0f);
 
         for (int j = 0; j < aloe_vera.meshes.size(); j++) {
-            /*
-            aloeShader.setInt("material.texture_diffuse1", 0);
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, aloe_vera.textures_loaded[j].id);
-            */
-            bool flag = false; // checks whether a mash has a normal map
+            bool flag = false; // checks whether a mesh has a normal map
             for(int i = 0; i < aloe_vera.meshes[j].textures.size(); i++) {
                 if(aloe_vera.meshes[j].textures[i].type == "texture_diffuse") {
                     aloeShader.setInt("material.texture_diffuse1", i);
@@ -226,7 +207,7 @@ int main() {
             }
             aloeShader.setBool("flag", flag);
             glBindVertexArray(aloe_vera.meshes[j].VAO);
-            glDrawElementsInstanced(GL_TRIANGLES, aloe_vera.meshes[j].indices.size(), GL_UNSIGNED_INT, 0, amount);
+            glDrawElementsInstanced(GL_TRIANGLES, aloe_vera.meshes[j].indices.size(), GL_UNSIGNED_INT, nullptr, amount);
             glBindVertexArray(0);
         }
         lightSource.use();
@@ -238,6 +219,62 @@ int main() {
         lightSource.setMat4("model", model);
         lightBall.Draw(lightSource);
 
+        basic.use();
+        basic.setMat4("projection", projection);
+        basic.setMat4("view", view);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 2.00f, 0.0f));
+        basic.setMat4("model", model);
+
+        basic.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
+        basic.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+        basic.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
+        basic.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
+        basic.setVec3("pointLight.position", lightPos);
+        basic.setVec3("pointLight.ambient", 0.2f, 0.2f, 0.2f);
+        basic.setVec3("pointLight.diffuse", 0.5f, 0.5f, 0.5f);
+        basic.setVec3("pointLight.specular", 1.0f, 1.0f, 1.0f);
+        basic.setFloat("pointLight.constant", 1.0f);
+        basic.setFloat("pointLight.linear", 0.09f);
+        basic.setFloat("pointLight.quadratic", 0.032f);
+
+        basic.setVec3("lightPos", lightPos);
+        basic.setVec3("viewPos", camera.Position);
+        basic.setFloat("material.shininess", 32.0f);
+        for (int j = 0; j < room.meshes.size(); j++) {
+            bool flag = false; // checks whether a mesh has a normal map
+            basic.setBool("parallax", false);
+            for(int i = 0; i < room.meshes[j].textures.size(); i++) {
+                if(room.meshes[j].textures[i].type == "texture_diffuse") {
+                    basic.setInt("material.texture_diffuse1", i);
+                    glActiveTexture(GL_TEXTURE0);
+                    glBindTexture(GL_TEXTURE_2D, room.meshes[j].textures[i].id);
+                } else if(room.meshes[j].textures[i].type == "texture_specular") {
+                    basic.setInt("material.texture_specular1", i);
+                    glActiveTexture(GL_TEXTURE1);
+                    glBindTexture(GL_TEXTURE_2D, room.meshes[j].textures[i].id);
+                } else if(room.meshes[j].textures[i].type == "texture_normal") {
+                    basic.setInt("material.normalMap", 2);
+                    glActiveTexture(GL_TEXTURE2);
+                    glBindTexture(GL_TEXTURE_2D, room.meshes[j].textures[i].id);
+                    flag = true;
+                }
+            }
+            basic.setBool("flag", flag);
+            // knowing our model, if there is a normal map, then we know there is a displacement map
+            if(flag) {
+                // loading displacement map
+                // obj file doesn't recognize displacement maps, so we have to load it here
+                basic.setInt("material.depthMap", 3);
+                glActiveTexture(GL_TEXTURE3);
+                glBindTexture(GL_TEXTURE_2D, heightMap);
+                basic.setBool("parallax", true);
+                basic.setFloat("heightScale", heightScale);
+            }
+            glBindVertexArray(room.meshes[j].VAO);
+            glDrawElements(GL_TRIANGLES, room.meshes[j].indices.size(), GL_UNSIGNED_INT, nullptr);
+            glBindVertexArray(0);
+        }
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
