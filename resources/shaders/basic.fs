@@ -157,8 +157,8 @@ void main() {
             if(texCoords.x > 1.0 || texCoords.y > 1.0 || texCoords.x < 0.0 || texCoords.y < 0.0)
                 discard;
         }
-    vec3 result = CalcPointLight(pointLight, normal, fs_in.FragPos, viewDir, flag);
-    result += CalcDirLight(dirLight, normal, viewDir);
+    vec3 result = CalcDirLight(dirLight, normal, viewDir);
+    result += CalcPointLight(pointLight, normal, fs_in.FragPos, viewDir, flag);
    //vec3 result = texture(material.texture_diffuse1, TexCoords).rgb;
     FragColor = vec4(result, 1.0);
 }
