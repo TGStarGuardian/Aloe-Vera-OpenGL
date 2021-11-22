@@ -1,4 +1,4 @@
-This is a project in Computer Graphics course.
+This is a project in Computer Graphics course, University of Belgrade.
 
 Aloe Vera model was taken from this site: https://www.cgtrader.com/free-3d-models/plant/pot-plant/aloe-vera-plant-dcc07e32-ba23-4674-af4c-a52d6f608b91
 
