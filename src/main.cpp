@@ -76,12 +76,13 @@ int main() {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
-    
-
 
     // depth testing
     glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
+    //glDepthFunc(GL_LESS);
+    // blending
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
     stbi_set_flip_vertically_on_load(true);
@@ -90,12 +91,14 @@ int main() {
     Model lightBall("resources/objects/ball/ball.obj");
     Model room("resources/objects/room/untitled.obj");
     unsigned int heightMap = loadTexture(string("resources/objects/room/displacement.png").c_str());
+    Model glassDoor("resources/objects/room/glass.obj");
 
     // instantiation of shaders
 
     Shader aloeShader("resources/shaders/aloe_vera.vs", "resources/shaders/aloe_vera.fs");
     Shader lightSource("resources/shaders/light_source.vs", "resources/shaders/light_source.fs");
     Shader basic("resources/shaders/basic.vs", "resources/shaders/basic.fs");
+    Shader glass("resources/shaders/glass.vs", "resources/shaders/glass.fs");
 
     // setting point light
     glm::vec3 lightPos(0.0f, 1.0f, 1.0f);
@@ -217,7 +220,12 @@ int main() {
         lightSource.setMat4("view", view);
         lightSource.setMat4("projection", projection);
         lightSource.setMat4("model", model);
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+        glFrontFace(GL_CW);
         lightBall.Draw(lightSource);
+
+        glDisable(GL_CULL_FACE);
 
         basic.use();
         basic.setMat4("projection", projection);
@@ -275,6 +283,11 @@ int main() {
             glDrawElements(GL_TRIANGLES, room.meshes[j].indices.size(), GL_UNSIGNED_INT, nullptr);
             glBindVertexArray(0);
         }
+        glass.use();
+        glass.setMat4("view", view);
+        glass.setMat4("projection", projection);
+        glass.setMat4("model", model);
+        glassDoor.Draw(glass);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
