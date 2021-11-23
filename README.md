@@ -27,4 +27,12 @@ Topics covered:
   - Blending (the window panel)
   - Face Culling (used on the white ball that serves as the light source)
 
+![Screenshot](/screenshots/Screenshot from 2021-11-23 07-59-00.png)
 
+![Screenshot](/screenshots/Screenshot from 2021-11-23 07-59-08.png)
+
+![Screenshot](/screenshots/Screenshot from 2021-11-23 07-59-14.png)
+
+![Screenshot](/screenshots/Screenshot from 2021-11-23 07-59-27.png)
+
+![Screenshot](/screenshots/Screenshot from 2021-11-23 08-00-19.png)
