@@ -20,9 +20,11 @@ Topics covered:
   - Textures
   - Camera
   - Affine transformations
-  - Basic Lighting, namely: Directional and Point Lights using Blinn-Phong Lighting model
+  - Basic Lighting, namely: Point Lights and Spotlights using Blinn-Phong Lighting model
   - Materials and Lighting Maps
   - Model Loading and Model Rendering
   - Depth Testing
   - Blending (the window panel)
   - Face Culling (used on the white ball that serves as the light source)
+
+
