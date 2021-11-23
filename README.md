@@ -27,12 +27,13 @@ Topics covered:
   - Blending (the window panel)
   - Face Culling (used on the white ball that serves as the light source)
 
-![Screenshot](/screenshots/Screenshot from 2021-11-23 07-59-00.png)
+![Screenshot from 2021-11-23 08-00-19](https://user-images.githubusercontent.com/80158819/142983840-7a92a740-9117-457e-a523-03f88b85d76f.png)
 
-![Screenshot](/screenshots/Screenshot from 2021-11-23 07-59-08.png)
+![Screenshot from 2021-11-23 07-59-27](https://user-images.githubusercontent.com/80158819/142983849-20bd4d29-b9ee-4635-bd48-b69421e808a5.png)
 
-![Screenshot](/screenshots/Screenshot from 2021-11-23 07-59-14.png)
+![Screenshot from 2021-11-23 07-59-14](https://user-images.githubusercontent.com/80158819/142983856-e7f2ac3d-fab0-4c5f-9582-ec46059c4ba4.png)
 
-![Screenshot](/screenshots/Screenshot from 2021-11-23 07-59-27.png)
+![Screenshot from 2021-11-23 07-59-08](https://user-images.githubusercontent.com/80158819/142983862-d8ec97f4-686c-48b5-9726-47f151af228d.png)
 
-![Screenshot](/screenshots/Screenshot from 2021-11-23 08-00-19.png)
+![Screenshot from 2021-11-23 07-59-00](https://user-images.githubusercontent.com/80158819/142983868-810ec2e5-82d6-490f-b4b7-2758c0a2b15e.png)
+
