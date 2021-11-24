@@ -289,6 +289,15 @@ int main() {
             lightSource.setMat4("model", model);
             lightBall.Draw(lightSource);
 
+        for (int i = 0; i < spotlights->length(); i++) {
+            lightSource.use();
+            model = glm::mat4(1.0f);
+            model = glm::translate(model, spotlights[i]);
+            model = glm::scale(model, glm::vec3(1.0f / 20));
+            lightSource.setMat4("model", model);
+            lightBall.Draw(lightSource);
+        }
+
             glDisable(GL_CULL_FACE);
 
             // there's no need to cull faces on our room, as it is made out of 6 planes
@@ -407,39 +416,6 @@ int main() {
                 glBindVertexArray(0);
             }
 
-/*
-        simple.use();
-        simple.setMat4("projection", projection);
-        simple.setMat4("view", view);
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 2.00f, 0.0f));
-        simple.setMat4("model", model);
-
-        simple.setVec3("pointLight.position", lightPos);
-        simple.setVec3("pointLight.ambient", 0.2f, 0.2f, 0.2f);
-        simple.setVec3("pointLight.diffuse", 0.5f, 0.5f, 0.5f);
-        simple.setVec3("pointLight.specular", 1.0f, 1.0f, 1.0f);
-        simple.setFloat("pointLight.constant", 1.0f);
-        simple.setFloat("pointLight.linear", 0.09f);
-        simple.setFloat("pointLight.quadratic", 0.032f);
-
-        simple.setVec3("lightPos", lightPos);
-        for(int i = 0; i < spotlights->length(); i++) {
-            simple.setVec3("lightPos[" + to_string(i + 1) + "]", spotlights[i]);
-            simple.setVec3("lightDirs[" + to_string(i) + "]", camera.Position - spotlights[i]);
-            simple.setVec3("spotlights[" + to_string(i) + ".ambient", 0.5f, 0.5f, 0.5f);
-            simple.setVec3("spotlights[" + to_string(i) + ".diffuse", 1.0f, 1.0f, 1.0f);
-            simple.setVec3("spotlights[" + to_string(i) + "].specular", 1.0f, 1.0f, 1.0f);
-            simple.setFloat("spotlights[" + to_string(i) + "].constant", 1.0f);
-            simple.setFloat("spotlights[" + to_string(i) + "].linear", 0.09f);
-            simple.setFloat("spotlights[" + to_string(i) + "].quadratic", 0.032f);
-            simple.setVec3("spotlights[" + to_string(i) + "].position", spotlights[i]);
-            simple.setVec3("spotlights[" + to_string(i) + "].direction", camera.Position - spotlights[i]);
-            simple.setFloat("spotlights[" + to_string(i) + "].cutOff", glm::cos(glm::radians(12.5f)));
-            simple.setFloat("spotlights[" + to_string(i) + "].outerCutOff", glm::cos(glm::radians(15.0f)));
-        }
-        room.Draw(simple);
-        */
             glass.use();
             glass.setMat4("view", view);
             glass.setMat4("projection", projection);
@@ -449,15 +425,6 @@ int main() {
             model = glm::mat4(1.0f);
             model = glm::rotate(model, speed * deltaTime, glm::vec3(0.0f, 1.0f, 0.0f));
             lightPos = glm::vec3(model * glm::vec4(lightPos, 1.0f));
-
-            for (int i = 0; i < spotlights->length(); i++) {
-                lightSource.use();
-                model = glm::mat4(1.0f);
-                model = glm::translate(model, spotlights[i]);
-                model = glm::scale(model, glm::vec3(1.0f / 20));
-                lightSource.setMat4("model", model);
-                lightBall.Draw(lightSource);
-            }
 
             // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
             // -------------------------------------------------------------------------------
